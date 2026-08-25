@@ -1,21 +1,37 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-def f(x):
-    return -0.3*x**4 + 0.2*x**3 - 0.6*x**2 + 1.5*x - 1.0
+def amplificar_senal(senal_entrada, ganancia, vmax):
+    senal_salida = []
+    for vin in senal_entrada:
+        v_amp = vin * ganancia
+        
+        # Recorte de la senal (clipping)
+        if v_amp > vmax:
+            senal_salida.append(vmax)
+        elif v_amp < -vmax:
+            senal_salida.append(-vmax)
+        else:
+            senal_salida.append(v_amp)
+            
+    return senal_salida
 
-def df_real(x):
-    return -1.2*x**3 + 0.6*x**2 - 1.2*x + 1.5
+tiempo = np.linspace(0, 0.1, 500)
+frecuencia = 20.0
+# Senal de entrada
+entrada = 2.0 * np.sin(2.0 * np.pi * frecuencia * tiempo)
 
-x_eval = 1.0
-h = 0.1
+# Llamado a la funcion
+salida_recortada = amplificar_senal(entrada, ganancia=4.0, vmax=5.0)
 
-derivada_exacta = df_real(x_eval)
+plt.plot(tiempo, entrada, label="Entrada (V)")
+plt.plot(tiempo, salida_recortada, label="Salida Amplificada (V)", 
+         linestyle="--", linewidth=2)
 
-derivada_atras = (f(x_eval) - f(x_eval - h)) / h
+plt.title("Saturacion de un amplificador de audio")
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Voltaje (V)")
+plt.grid()
+plt.legend()
 
-error = abs(derivada_exacta - derivada_atras)
-
-print("--- Diferencia Finita Hacia Atras ---")
-print(f"Derivada real en x=1.0: {derivada_exacta}")
-print(f"Derivada aproximada: {derivada_atras}")
-print(f"Error absoluto: {error}")
+plt.show()

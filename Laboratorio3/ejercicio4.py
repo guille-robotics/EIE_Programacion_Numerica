@@ -1,21 +1,30 @@
-import numpy as np
+import matplotlib.pyplot as plt
 
-def f(x):
-    return 0.25*x**4 - 0.5*x**3 + 0.15*x**2 - 0.1*x + 2.0
+def procesar_sensores(*args):
+    # Si no se entregan argumentos, la tupla args estara vacia
+    if len(args) == 0:
+        return []
+    
+    valores_validos = []
+    
+    for lectura in args:
+        # Ignorar valores negativos (errores de lectura)
+        if lectura >= 0:
+            valores_validos.append(lectura)
+            
+    return valores_validos
 
-def df_real(x):
-    return 1.0*x**3 - 1.5*x**2 + 0.3*x - 0.1
+# Llamado pasando argumentos separados por coma
+datos_limpios = procesar_sensores(15.2, 16.4, -3.1, 14.8, -0.5, 17.1)
 
-x_eval = 0.5
-h = 0.25
+# Para el eje x creamos una lista de indices del mismo tamano
+indices = range(1, len(datos_limpios) + 1)
 
-derivada_exacta = df_real(x_eval)
+plt.plot(indices, datos_limpios, marker="o", linestyle="--")
 
-derivada_adelante = (f(x_eval + h) - f(x_eval)) / h
+plt.title("Lecturas validas del sensor")
+plt.xlabel("Numero de muestra")
+plt.ylabel("Temperatura (C)")
+plt.grid()
 
-error = abs(derivada_exacta - derivada_adelante)
-
-print("--- Diferencia Finita Hacia Adelante ---")
-print(f"Derivada real: {derivada_exacta}")
-print(f"Derivada aproximada: {derivada_adelante}")
-print(f"Error absoluto: {error}")
+plt.show()

@@ -1,30 +1,26 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import math
 
-def maclaurin_exp(x, N):
-    aprox = np.zeros_like(x)
-    for n in range(N):
-        aprox += (x**n) / math.factorial(n)
-    return aprox
+def velocidad_caida_libre(t, v0, g):
+    # La funcion evalua la ecuacion de velocidad de forma vectorizada
+    return v0 - g * t
 
-x = np.linspace(-3, 3, 100)
-y_real = np.exp(x)
+# Parametros iniciales
+v0 = 0.0
+g = 9.81
 
-y_aprox_2 = maclaurin_exp(x, 2)
-y_aprox_4 = maclaurin_exp(x, 4)
-y_aprox_6 = maclaurin_exp(x, 6)
+# Arreglo de tiempo usando np.linspace
+tiempo = np.linspace(0, 5, 50)
 
-plt.plot(x, y_real, label="e^x Real", color="black", linewidth=2)
-plt.plot(x, y_aprox_2, label="Maclaurin N=2", linestyle="--")
-plt.plot(x, y_aprox_4, label="Maclaurin N=4", linestyle="-.")
-plt.plot(x, y_aprox_6, label="Maclaurin N=6", linestyle=":")
+# Llamado a la funcion
+velocidades = velocidad_caida_libre(tiempo, v0, g)
 
-plt.title("Aproximacion de la Exponencial por Maclaurin")
-plt.xlabel("x")
-plt.ylabel("f(x)")
-plt.ylim(0, 25)
+# Creacion del grafico
+plt.plot(tiempo, velocidades, color="red")
+
+plt.title("Velocidad en caida libre")
+plt.xlabel("Tiempo (s)")
+plt.ylabel("Velocidad (m/s)")
 plt.grid()
-plt.legend()
 
 plt.show()

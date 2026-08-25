@@ -1,28 +1,35 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import math
 
-x0 = np.pi / 3
-valor_real = np.cos(x0)
+def posicion_balon(t, v0, angulo_rad, g):
+    x = v0 * np.cos(angulo_rad) * t
+    y = v0 * np.sin(angulo_rad) * t - 0.5 * g * t**2
+    return x, y
 
-terminos = np.arange(1, 11)
-errores = []
+v0 = 25.0
+angulo = 30.0
+g = 9.81
+angulo_rad = np.deg2rad(angulo)
 
-for N in terminos:
-    aprox = 0.0
-    for n in range(N):
-        aprox += ((-1)**n / math.factorial(2*n)) * (x0**(2*n))
-        
-    error_abs = abs(valor_real - aprox)
-    errores.append(error_abs)
+tiempos = np.arange(0.0, 3.0, 0.05)
 
-print("Error absoluto con N=5:", errores[4])
+x_lista = []
+y_lista = []
 
-plt.plot(terminos, errores, marker="o", color="red")
-plt.title("Error de aproximacion del Coseno (x = pi/3)")
-plt.xlabel("Numero de terminos (N)")
-plt.ylabel("Error absoluto")
-plt.yscale("log") # Escala logaritmica para visualizar mejor la caida
+for t in tiempos:
+    x_actual, y_actual = posicion_balon(t, v0, angulo_rad, g)
+    
+    # Solo almacenar si el balon esta sobre el suelo
+    if y_actual >= 0:
+        x_lista.append(x_actual)
+        y_lista.append(y_actual)
+
+plt.plot(x_lista, y_lista, marker=".", linestyle="-")
+
+plt.title("Trayectoria del balon de futbol")
+plt.xlabel("Distancia horizontal (m)")
+plt.ylabel("Altura (m)")
 plt.grid()
+plt.legend(["Trayectoria valida"])
 
 plt.show()
